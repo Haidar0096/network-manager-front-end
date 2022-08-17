@@ -1,15 +1,19 @@
 {
-  "name": "angular-seed",
+  "name": "network-manager",
   "private": true,
   "version": "0.0.0",
-  "description": "A starter project for AngularJS",
-  "repository": "https://github.com/angular/angular-seed",
+  "description": "AngularJS Network Manager",
+  "repository": "https://github.com/Haidar0096/network-manager-front-end",
   "license": "MIT",
   "dependencies": {
-    "angular": "^1.7.5",
-    "angular-loader": "^1.7.5",
-    "angular-route": "^1.7.5",
-    "html5-boilerplate": "0.0.1"
+    "@angular/material": "^14.1.2",
+    "angular": "^1.8.2",
+    "angular-animate": "^1.8.2",
+    "angular-aria": "^1.8.3",
+    "angular-material": "^1.2.5",
+    "angular-resource": "^1.8.2",
+    "angular-route": "^1.8.2",
+    "bootstrap": "5.2.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.7.5",

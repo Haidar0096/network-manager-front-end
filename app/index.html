@@ -1,43 +1,98 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>My AngularJS App</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/normalize.css">
-  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/main.css">
-  <link rel="stylesheet" href="app.css">
-  <script src="lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
-</head>
-<body>
-  <ul class="menu">
-    <li><a href="#!/view1">view1</a></li>
-    <li><a href="#!/view2">view2</a></li>
-  </ul>
+<html ng-app="networkManagerApp">
+  <head>
+    <meta charset="utf-8" />
+    <title>Network Manager</title>
 
-  <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-  <![endif]-->
+    <!-- App css -->
+    <link rel="stylesheet" href="app.css" />
 
-  <div ng-view></div>
+    <!-- Bootstrap css -->
+    <link href="/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
 
-  <div>AngularJS seed app: v<span app-version></span></div>
+    <!-- Angular -->
+    <script src="lib/angular/angular.js"></script>
 
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-  -->
-  <script src="lib/angular/angular.js"></script>
-  <script src="lib/angular-route/angular-route.js"></script>
-  <script src="app.js"></script>
-  <script src="view1/view1.js"></script>
-  <script src="view2/view2.js"></script>
-  <script src="core/version/version.js"></script>
-  <script src="core/version/version-directive.js"></script>
-  <script src="core/version/interpolate-filter.js"></script>
-</body>
+    <!-- Angular Route -->
+    <script src="lib/angular-route/angular-route.js"></script>
+
+    <!-- Angular Material css -->
+    <link rel="stylesheet" href="lib/angular-material/angular-material.css" />
+
+    <!-- Angular Material -->
+    <script src="lib/angular-material/angular-material.js"></script>
+
+    <!-- Angular Animations -->
+    <script src="lib/angular-animate/angular-animate.js"></script>
+
+    <!-- Angular Aria -->
+    <script src="lib/angular-aria/angular-aria.js"></script>
+
+    <!-- Angular Messages -->
+    <script src="lib/angular-messages/angular-messages.js"></script>
+
+    <!-- Angular Resource -->
+    <script src="lib/angular-resource/angular-resource.js"></script>
+
+    <!-- App module -->
+    <script src="app.module.js"></script>
+
+    <!-- App config -->
+    <script src="app.config.js"></script>
+
+    <!-- Common Module -->
+    <script src="common/common.module.js"></script>
+
+    <!-- Object Values Filter -->
+    <script src="common/object-values-filter/object-values.filter.js"></script>
+
+    <!-- Table View -->
+    <script src="common/table-view/table-view.module.js"></script>
+    <script src="common/table-view/table-view.component.js"></script>
+    <script src="common/table-view/table-view-data.model.js"></script>
+
+    <!-- Error View -->
+    <script src="common/error-view/error-view.module.js"></script>
+    <script src="common/error-view/error-view.component.js"></script>
+
+    <!-- Progress Indicator View -->
+    <script src="common/progress-indicator-view/progress-indicator-view.module.js"></script>
+    <script src="common/progress-indicator-view/progress-indictator-view.component.js"></script>
+
+    <!-- Devices Api -->
+    <script src="common/devices-api/devices-api.module.js"></script>
+    <script src="common/devices-api/devices-api.service.js"></script>
+    <script src="common/devices-api/device.model.js"></script>
+    <script src="common/devices-api/devices-api-requests.model.js"></script>
+
+    <!-- Header View -->
+    <script src="header/header-view.module.js"></script>
+    <script src="header/header-view.component.js"></script>
+
+    <!-- Home View -->
+    <script src="home/home-view.module.js"></script>
+    <script src="home/home-view.component.js"></script>
+
+    <!-- Devices View -->
+    <script src="devices-view/devices-view.module.js"></script>
+    <script src="devices-view/devices-view.component.js"></script>
+    <script src="devices-view/devices-view-state.service.js"></script>
+    <script src="devices-view/device-dialog-prompt.controller.js"></script>
+
+    <!-- Ports View -->
+    <script src="ports-view/ports-view.module.js"></script>
+    <script src="ports-view/ports-view.component.js"></script>
+
+    <!-- Clients View -->
+    <script src="clients-view/clients-view.module.js"></script>
+    <script src="clients-view/clients-view.component.js"></script>
+
+    <!-- View State -->
+    <script src="common/view-processing-state/view-processing-state.model.js"></script>
+  </head>
+
+  <body>
+    <header-view></header-view>
+    <div ng-view></div>
+  </body>
 </html>

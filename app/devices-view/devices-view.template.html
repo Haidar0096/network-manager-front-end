@@ -1,0 +1,36 @@
+<div class="md-padding">
+  <row>
+    <div class="md-padding" style="display: flex">
+      <input type="text" class="rounded" ng-model="$ctrl.state.searchText" />
+      <button class="md-padding button" ng-click="$ctrl.state.onSearch($ctrl.state.searchText)">Search</button>
+      <button class="md-padding button" ng-click="$ctrl.state.onAdd($event)">Add</button>
+      <button class="button previous md-padding rounded" ng-click="$ctrl.state.paginateBackward()">
+        &laquo; Previous
+      </button>
+      <button class="button next md-padding rounded" ng-click="$ctrl.state.paginateForward()">Next &raquo;</button>
+      <div class="column md-padding">
+        <p>Page</p>
+        <select ng-model="$ctrl.state.selectedPage" ng-change="$ctrl.state.goToPage($ctrl.state.selectedPage)">
+          <option ng-repeat="i in [].constructor($ctrl.state.getPagesCount()) track by $index">{{$index + 1}}</option>
+        </select>
+      </div>
+      <div class="column md-padding">
+        <p>Count Per Page</p>
+        <select ng-model="$ctrl.state.selectedCount" ng-change="$ctrl.state.changeCount($ctrl.state.count)">
+          <option ng-repeat="i in [].constructor(1000) track by $index">{{$index + 1}}</option>
+        </select>
+      </div>
+      <progress-indicator-view
+        text="$ctrl.state.processingState.processingMessage"
+        visible="$ctrl.state.processingState.processing"
+      ></progress-indicator-view>
+      <error-view
+        text="$ctrl.state.processingState.errorMessage"
+        visible="$ctrl.state.processingState.hasError"
+      ></error-view>
+    </div>
+  </row>
+  <div>
+    <table-view table-data="$ctrl.state.tableData" on-row-click="$ctrl.state.onUpdate"></table-view>
+  </div>
+</div>
