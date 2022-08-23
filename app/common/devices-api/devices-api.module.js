@@ -1,3 +1,5 @@
+"use strict";
+
 angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
   "$resource",
   function DevicesApi($resource) {
@@ -9,24 +11,20 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
       "",
       {},
       {
-        getAllDevices: {
-          url: baseUrl + "/all",
-          method: "GET",
-        },
         getDevicesPaginated: {
           url: baseUrl + "/paginated?offset=:offset&count=:count",
           method: "GET",
         },
-        getDevicesByName: {
-          url: baseUrl + "/by-name?name=name&exactMatch=exactMatch",
-          method: "GET",
-        },
         getDevicesByNamePaginated: {
-          url: baseUrl + "/by-name-paginated?name=name&offset=offset&count=count&exactMatch=exactMatch",
+          url: baseUrl + "/by-name-paginated?deviceName=:name&offset=:offset&count=:count&exactMatch=:exactMatch",
           method: "GET",
         },
         getDevicesCount: {
           url: baseUrl + "/count",
+          method: "GET",
+        },
+        getDevicesCountByName: {
+          url: baseUrl + "/count-by-name?deviceName=:name&exactMatch=:exactMatch",
           method: "GET",
         },
         addDevice: {
@@ -43,13 +41,11 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
     const httpDevicesMapper = (httpDevices) =>
       httpDevices.map((httpDevice) => new Device({ id: httpDevice.Id, name: httpDevice.Name }));
 
-    self.getAllDevices = () =>
-      DevicesResource.getAllDevices().$promise.then((response) => httpDevicesMapper(response.Data));
-
-    self.getDevicesByName = (name, exactMatch = false) =>
-      DevicesResource.getDevicesByName({ name: name, exactMatch: exactMatch }).$promise.then((response) =>
-        httpDevicesMapper(response.Data)
-      );
+    self.getDevicesPaginated = (offset, count) =>
+      DevicesResource.getDevicesPaginated({
+        offset: offset,
+        count: count,
+      }).$promise.then((response) => httpDevicesMapper(response.Data));
 
     self.getDevicesByNamePaginated = (name, offset, count, exactMatch = false) =>
       DevicesResource.getDevicesByNamePaginated({
@@ -59,6 +55,12 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
         exactMatch: exactMatch,
       }).$promise.then((response) => httpDevicesMapper(response.Data));
 
+    self.getDevicesCount = () => DevicesResource.getDevicesCount().$promise.then((response) => response.Data);
+
+    self.getDevicesCountByName = (name, exactMatch = false) => {
+      return DevicesResource.getDevicesCountByName({ name, exactMatch }).$promise.then((response) => response.Data);
+    };
+
     self.addDevice = (deviceName) =>
       DevicesResource.addDevice(new AddDeviceRequest(deviceName)).$promise.then((response) => response.Data);
 
@@ -66,14 +68,6 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
       DevicesResource.updateDevice(new UpdateDeviceRequest(deviceId, deviceName)).$promise.then(
         (response) => response.Data
       );
-
-    self.getDevicesPaginated = (offset, count) =>
-      DevicesResource.getDevicesPaginated({
-        offset: offset,
-        count: count,
-      }).$promise.then((response) => httpDevicesMapper(response.Data));
-
-    self.getDevicesCount = () => DevicesResource.getDevicesCount().$promise.then((response) => response.Data);
   },
 ]);
 

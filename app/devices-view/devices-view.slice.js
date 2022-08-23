@@ -13,6 +13,9 @@ const initialState = devicesAdapter.getInitialState({
     countPerPage: 5, // nb of devices per page
     totalCount: 0, // total number of devices, including the ones on the server
   },
+  filters: {
+    deviceName: null, // filter by device name
+  },
   status: STATUS_IDLE,
   errorMessage: null,
 });
@@ -28,6 +31,17 @@ const calculatePageOffset = (page, countPerPage) => (page - 1) * countPerPage;
 const calculatePagesCount = (totalCount, countPerPage) => Math.ceil(totalCount / countPerPage);
 
 /**
+ * Calculates the total count of the devices using the right api call depending on the filters.
+ */
+const getTotalCount = async (devicesApi, filters) => {
+  if (filters.deviceName) {
+    return await devicesApi.getDevicesCountByName(filters.deviceName);
+  } else {
+    return await devicesApi.getDevicesCount();
+  }
+};
+
+/**
  * Navigates the state to the given page, and updates pagination data.
  * @param {page} page - the page to navigate to. If less than 1, navigates to the first page. If greater than pagesCount, navigates to the last page.
  * @param {devicesApi} devicesApi - the devices API
@@ -37,9 +51,13 @@ const goToPage = RTK.createAsyncThunk("devices/goToPage", async (args, utils) =>
     if (!isNumber(args.page)) {
       throw new Error("page must be a number");
     }
+    const filters = filtersSelector(utils.getState());
+
     const currentPaginationData = paginationDataSelector(utils.getState());
     const countPerPage = currentPaginationData.countPerPage;
-    const totalCount = await args.devicesApi.getDevicesCount();
+
+    const totalCount = await getTotalCount(args.devicesApi, filters);
+
     const pagesCount = calculatePagesCount(totalCount, countPerPage);
 
     let page = args.page;
@@ -49,44 +67,16 @@ const goToPage = RTK.createAsyncThunk("devices/goToPage", async (args, utils) =>
       page = pagesCount;
     }
     const offset = calculatePageOffset(page, countPerPage);
-    const devices = await args.devicesApi.getDevicesPaginated(offset, countPerPage);
+
+    // check if there is a filter on the device name
+    let devices = [];
+    if (filters.deviceName) {
+      devices = await args.devicesApi.getDevicesByNamePaginated(filters.deviceName, offset, countPerPage, false);
+    } else {
+      devices = await args.devicesApi.getDevicesPaginated(offset, countPerPage);
+    }
 
     const updatedPaginationData = { ...currentPaginationData, page: page, totalCount: totalCount };
-
-    return utils.fulfillWithValue({ devices, updatedPaginationData });
-  } catch (e) {
-    return utils.rejectWithValue(e);
-  }
-});
-
-/**
- * Changes the device count per page and navigates to the first page. It updates the navigation data as well.
- * @param {countPerPage} countPerPage - the number of devices per page
- * @param {devicesApi} devicesApi - the devices API
- */
-const changeCountPerPage = RTK.createAsyncThunk("devices/changeCountPerPage", async (args, utils) => {
-  try {
-    if (!isNumber(args.countPerPage)) {
-      throw new Error("countPerPage must be a number");
-    }
-    if (args.countPerPage < 1) {
-      throw new Error("countPerPage must be greater than 0");
-    }
-    const currentPaginationData = paginationDataSelector(utils.getState());
-    const totalCount = await args.devicesApi.getDevicesCount();
-
-    let page = 1;
-    const offset = calculatePageOffset(page, args.countPerPage);
-
-    
-    const devices = await args.devicesApi.getDevicesPaginated(offset, args.countPerPage);
-
-    const updatedPaginationData = {
-      ...currentPaginationData,
-      page: page,
-      countPerPage: args.countPerPage,
-      totalCount: totalCount,
-    };
 
     return utils.fulfillWithValue({ devices, updatedPaginationData });
   } catch (e) {
@@ -126,7 +116,14 @@ const updateDevice = RTK.createAsyncThunk("devices/updateDevice", async (args, u
 const devicesSlice = RTK.createSlice({
   name: "devices",
   initialState,
-  reducers: {},
+  reducers: {
+    changeDeviceNameFilter(state, action) {
+      state.filters.deviceName = action.payload.deviceName;
+    },
+    changeCountPerPage(state, action) {
+      state.paginationData.countPerPage = action.payload.countPerPage;
+    },
+  },
   extraReducers: (builder) => {
     const defaultErrorMessage = "An error has occurred, please refresh the page.";
     // handle goToPage
@@ -143,24 +140,6 @@ const devicesSlice = RTK.createSlice({
         state.status = STATUS_IDLE;
       })
       .addCase(goToPage.rejected, (state, action) => {
-        state.errorMessage = defaultErrorMessage;
-        state.status = STATUS_IDLE;
-      });
-
-    // handle changeCountPerPage
-    builder
-      .addCase(changeCountPerPage.pending, (state, action) => {
-        state.status = STATUS_LOADING;
-      })
-      .addCase(changeCountPerPage.fulfilled, (state, action) => {
-        // update devices
-        devicesAdapter.setAll(state, action.payload.devices);
-        // update paginated data
-        state.paginationData = action.payload.updatedPaginationData;
-
-        state.status = STATUS_IDLE;
-      })
-      .addCase(changeCountPerPage.rejected, (state, action) => {
         state.errorMessage = defaultErrorMessage;
         state.status = STATUS_IDLE;
       });
@@ -197,7 +176,6 @@ const devicesSlice = RTK.createSlice({
 export const devicesActions = {
   ...devicesSlice.actions,
   goToPage,
-  changeCountPerPage,
   addDevice,
   updateDevice,
 };
@@ -214,5 +192,7 @@ export const pagesCountSelector = (state) =>
   calculatePagesCount(paginationDataSelector(state).totalCount, paginationDataSelector(state).countPerPage);
 
 export const statusSelector = (state) => state.devicesViewState.status;
+
+export const filtersSelector = (state) => state.devicesViewState.filters;
 
 export const errorMessageSelector = (state) => state.devicesViewState.errorMessage;

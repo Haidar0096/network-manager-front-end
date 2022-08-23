@@ -9,6 +9,7 @@ import {
   STATUS_LOADING,
   paginationDataSelector,
   pagesCountSelector,
+  filtersSelector,
 } from "./devices-view.slice.js";
 
 angular
@@ -23,7 +24,7 @@ angular
       function DevicesViewController($ngRedux, $scope, devicesApi, $mdDialog) {
         let self = this;
 
-        const mapStateToThis = function (state) {
+        const mapStateToThis = (state) => {
           const devices = devicesListSelector(state);
           const paginationData = paginationDataSelector(state);
           const pagesCount = pagesCountSelector(state);
@@ -33,38 +34,30 @@ angular
             countPerPage: paginationData.countPerPage,
             pagesList: Array.from({ length: pagesCount }, (_, i) => i + 1),
             devicesEmpty: devices.length === 0,
+            deviceNameFilter: filtersSelector(state).deviceName,
             loading: statusSelector(state) === STATUS_LOADING,
             errorMessage: errorMessageSelector(state),
           };
         };
 
-        // todo: implement getDevicesByNamePaginated
-        self.getDevicesByNamePaginated = (deviceName) => {
-          console.log("getDevicesByNamePaginated called with deviceName: " + deviceName);
-        };
-
         const unsubscribe = $ngRedux.connect(mapStateToThis, {})(self);
         $scope.$on("$destroy", unsubscribe);
 
-        self.paginateTo = async (page) =>
-          await $ngRedux.dispatch(
-            devicesActions.goToPage({
-              devicesApi: devicesApi,
-              page: page,
-            })
-          );
+        self.paginateTo = async (page) => {
+          if (page) {
+            await $ngRedux.dispatch(
+              devicesActions.goToPage({
+                devicesApi: devicesApi,
+                page: page,
+              })
+            );
+          }
+        };
 
-        self.paginateForward = () => self.paginateTo(self.page + 1);
-
-        self.paginateBackward = () => self.paginateTo(self.page - 1);
-
-        self.changeCountPerPage = async (countPerPage) =>
-          await $ngRedux.dispatch(
-            devicesActions.changeCountPerPage({
-              devicesApi: devicesApi,
-              countPerPage: countPerPage,
-            })
-          );
+        self.onSearchPressed = async (deviceName) => {
+          await $ngRedux.dispatch(devicesActions.changeDeviceNameFilter({ deviceName }));
+          await self.paginateTo(1);
+        };
 
         self.addDevice = async ($event) => {
           let deviceName = await $mdDialog.show({
@@ -88,7 +81,19 @@ angular
           }
         };
 
-        // todo implement onRowClick
+        self.paginateBackward = async () => {
+          self.paginateTo(self.page - 1);
+        };
+
+        self.paginateForward = async () => {
+          self.paginateTo(self.page + 1);
+        };
+
+        self.changeCountPerPage = async (countPerPage) => {
+          await $ngRedux.dispatch(devicesActions.changeCountPerPage({ countPerPage }));
+          await self.paginateTo(1);
+        };
+
         self.onRowClick = async ($event, device) => {
           let deviceName = await $mdDialog.show({
             templateUrl: "common/prompt-dialog/prompt-dialog.template.html",
@@ -112,10 +117,11 @@ angular
           }
         };
 
-        self.paginateTo(self.page); // go to page 1 initially
+        self.paginateTo(self.page); // go to page 1 when this view is initialized
       },
     ],
   })
+  // constant values for the add user dialog
   .value("AddUserDialogControllerArgs", {
     title: "Add Device",
     prompt: "Enter the device name:",
@@ -129,6 +135,7 @@ angular
       }
     },
   })
+  // constant values for the update user dialog
   .value("UpdateUserDialogControllerArgs", {
     title: "Update Device",
     prompt: "Enter the new device name:",
