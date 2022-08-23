@@ -1,3 +1,5 @@
+"use strict";
+
 // A filter that returns the values of an object as an array.
 angular.module("common").filter("objectValues", function () {
   return function (input) {

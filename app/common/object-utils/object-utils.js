@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Returns true if the given value is a number (number string will return false with this method).
  */

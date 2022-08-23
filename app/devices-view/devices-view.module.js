@@ -10,7 +10,8 @@ import {
   paginationDataSelector,
   pagesCountSelector,
   filtersSelector,
-} from "./devices-view.slice.js";
+} from "/app/devices-view/devices-view.slice.js";
+import TableViewData from "/app/common/table-view/table-view-data.model.js";
 
 angular
   .module("devicesView", ["common"])
@@ -44,7 +45,7 @@ angular
         $scope.$on("$destroy", unsubscribe);
 
         self.paginateTo = async (page) => {
-          if (page) {
+          if (page!==undefined && page!==null) {
             await $ngRedux.dispatch(
               devicesActions.goToPage({
                 devicesApi: devicesApi,
@@ -118,6 +119,11 @@ angular
         };
 
         self.paginateTo(self.page); // go to page 1 when this view is initialized
+
+        self.shown = false;
+        self.toggle = () => {
+          self.shown = !self.shown;
+        };
       },
     ],
   })

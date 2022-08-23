@@ -6,3 +6,5 @@ class TableViewData {
     this.rows = rows;
   }
 }
+
+export default TableViewData;
