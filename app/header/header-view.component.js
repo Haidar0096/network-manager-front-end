@@ -1,19 +1,18 @@
+import { paginationDataSelector } from "/app/devices-view/devices-view.slice.js";
+
 angular.module("headerView").component("headerView", {
   templateUrl: "header/header-view.template.html",
   controller: [
     "$location",
-    "devicesViewState",
-    function headerViewController($location, devicesViewState) {
+    "$ngRedux",
+    function headerViewController($location, $ngRedux) {
       let self = this;
 
       self.title = "Network Manager";
       self.version = "1.0.0";
 
       self.redirectToHome = () => $location.path("/home");
-      self.redirectToDevices = function () {
-        $location.path("/devices");
-        $location.search({ offset: 0, count: 10 });
-      };
+      self.redirectToDevices = () => $location.path("/devices");
       self.redirectToPorts = () => $location.path("/ports");
       self.redirectToClients = () => $location.path("/clients");
     },

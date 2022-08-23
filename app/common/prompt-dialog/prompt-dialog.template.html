@@ -2,13 +2,14 @@
   <md-dialog-content class="centered">
     <p>{{$ctrl.title}}</p>
     <input class="form-control text-center" type="text" ng-model="$ctrl.data" placeholder="{{$ctrl.placeholder}}" />
+    <label class="text-danger" ng-style="{'visibility':$ctrl.alertText?'visible':'hidden'}">{{$ctrl.alertText}}</label>
   </md-dialog-content>
   <md-dialog-actions>
     <div class="centered" style="width: 100%">
       <md-button class="md-raised md-primary" ng-click="$ctrl.onConfirm($ctrl.data)"
-        >{{$ctrl.confirmMessage}}</md-button
+        >{{$ctrl.confirmText}}</md-button
       >
-      <md-button class="md-raised" ng-click="$ctrl.onCancel()">{{$ctrl.cancelMessage}}</md-button>
+      <md-button class="md-raised" ng-click="$ctrl.onCancel()">{{$ctrl.cancelText}}</md-button>
     </div>
   </md-dialog-actions>
 </md-dialog>

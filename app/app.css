@@ -35,6 +35,10 @@
   background-color: wheat;
 }
 
+.button:disabled{
+  background-color: lightgray;
+}
+
 .table-rounded {
   border-radius: 12px;
 }
@@ -43,12 +47,24 @@
   padding-top: 20px;
 }
 
-.previous {
-  background-color: #f1f1f1;
-  color: black;
+.bordered {
+  padding: 5px;
+  border: 1px solid black;
 }
 
-.next {
-  background-color: #04aa6d;
-  color: white;
+.container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+}
+
+.container-space-evenly{
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+  justify-content: space-evenly;
+}
+
+.text-danger{
+  color: red;
 }

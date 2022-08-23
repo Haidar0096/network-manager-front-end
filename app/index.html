@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="app.css" />
 
     <!-- Bootstrap css -->
-    <link href="/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="lib/bootstrap/bootstrap.css" rel="stylesheet" />
+
+    <!-- Font Awesome css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
     <!-- Angular -->
     <script src="lib/angular/angular.js"></script>
@@ -34,14 +37,22 @@
     <!-- Angular Resource -->
     <script src="lib/angular-resource/angular-resource.js"></script>
 
+    <!-- Redux -->
+    <script src="lib/redux/redux.js"></script>
+    <script src="lib/angular-redux/ng-redux.js"></script>
+    <script src="lib/redux-toolkit/redux-toolkit.js"></script>
+
     <!-- App module -->
     <script src="app.module.js"></script>
 
     <!-- App config -->
-    <script src="app.config.js"></script>
+    <script type="module" src="app.config.js"></script>
 
     <!-- Common Module -->
     <script src="common/common.module.js"></script>
+
+    <!-- Prompt Dialog -->
+    <script type="module" src="common/prompt-dialog/prompt-dialog.controller.js"></script>
 
     <!-- Object Values Filter -->
     <script src="common/object-values-filter/object-values.filter.js"></script>
@@ -55,29 +66,20 @@
     <script src="common/error-view/error-view.module.js"></script>
     <script src="common/error-view/error-view.component.js"></script>
 
-    <!-- Progress Indicator View -->
-    <script src="common/progress-indicator-view/progress-indicator-view.module.js"></script>
-    <script src="common/progress-indicator-view/progress-indictator-view.component.js"></script>
-
     <!-- Devices Api -->
-    <script src="common/devices-api/devices-api.module.js"></script>
-    <script src="common/devices-api/devices-api.service.js"></script>
-    <script src="common/devices-api/device.model.js"></script>
-    <script src="common/devices-api/devices-api-requests.model.js"></script>
+    <script type="module" src="common/devices-api/devices-api.module.js"></script>
 
     <!-- Header View -->
     <script src="header/header-view.module.js"></script>
-    <script src="header/header-view.component.js"></script>
+    <script type="module" src="header/header-view.component.js"></script>
 
     <!-- Home View -->
-    <script src="home/home-view.module.js"></script>
-    <script src="home/home-view.component.js"></script>
+    <script src="home-view/home-view.module.js"></script>
+    <script src="home-view/home-view.component.js"></script>
 
     <!-- Devices View -->
-    <script src="devices-view/devices-view.module.js"></script>
-    <script src="devices-view/devices-view.component.js"></script>
-    <script src="devices-view/devices-view-state.service.js"></script>
-    <script src="devices-view/device-dialog-prompt.controller.js"></script>
+    <script type="module" src="devices-view/devices-view.module.js"></script>
+    <script type="moudle" src="devices-view/devices.slice.js"></script>
 
     <!-- Ports View -->
     <script src="ports-view/ports-view.module.js"></script>
@@ -87,8 +89,8 @@
     <script src="clients-view/clients-view.module.js"></script>
     <script src="clients-view/clients-view.component.js"></script>
 
-    <!-- View State -->
-    <script src="common/view-processing-state/view-processing-state.model.js"></script>
+    <!-- Object Utils -->
+    <script type="module" src="common/object-utils/object-utils.js"></script>
   </head>
 
   <body>

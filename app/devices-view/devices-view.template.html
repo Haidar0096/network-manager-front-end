@@ -1,36 +1,59 @@
 <div class="md-padding">
-  <row>
-    <div class="md-padding" style="display: flex">
-      <input type="text" class="rounded" ng-model="$ctrl.state.searchText" />
-      <button class="md-padding button" ng-click="$ctrl.state.onSearch($ctrl.state.searchText)">Search</button>
-      <button class="md-padding button" ng-click="$ctrl.state.onAdd($event)">Add</button>
-      <button class="button previous md-padding rounded" ng-click="$ctrl.state.paginateBackward()">
-        &laquo; Previous
-      </button>
-      <button class="button next md-padding rounded" ng-click="$ctrl.state.paginateForward()">Next &raquo;</button>
-      <div class="column md-padding">
-        <p>Page</p>
-        <select ng-model="$ctrl.state.selectedPage" ng-change="$ctrl.state.goToPage($ctrl.state.selectedPage)">
-          <option ng-repeat="i in [].constructor($ctrl.state.getPagesCount()) track by $index">{{$index + 1}}</option>
-        </select>
-      </div>
-      <div class="column md-padding">
-        <p>Count Per Page</p>
-        <select ng-model="$ctrl.state.selectedCount" ng-change="$ctrl.state.changeCount($ctrl.state.count)">
-          <option ng-repeat="i in [].constructor(1000) track by $index">{{$index + 1}}</option>
-        </select>
-      </div>
-      <progress-indicator-view
-        text="$ctrl.state.processingState.processingMessage"
-        visible="$ctrl.state.processingState.processing"
-      ></progress-indicator-view>
-      <error-view
-        text="$ctrl.state.processingState.errorMessage"
-        visible="$ctrl.state.processingState.hasError"
-      ></error-view>
-    </div>
-  </row>
+  <div class="container-space-evenly">
+    <!-- <button class="button" ng-disabled="$ctrl.loading || $ctrl.errorMessage" ng-click="$ctrl.paginateTo($ctrl.page)"> -->
+      <!-- <i class="fa fa-refresh" ng-class="{'fa-spin': $ctrl.loading || $ctrl.errorMessage}"></i> -->
+    <!-- </button> -->
+    <input type="text" class="rounded" ng-model="searchText" />
+    <button
+      class="button centered"
+      ng-click="$ctrl.getDevicesByNamePaginated(searchText)"
+      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
+    >
+      Search
+    </button>
+    <button
+      class="button centered"
+      ng-click="$ctrl.addDevice($event)"
+      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
+    >
+      Add
+    </button>
+    <button
+      class="button centered"
+      ng-click="$ctrl.paginateBackward()"
+      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
+    >
+      &laquo; Previous
+    </button>
+    <button
+      class="button centered"
+      ng-click="$ctrl.paginateForward()"
+      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
+    >
+      Next &raquo;
+    </button>
+    <p>Page:</p>
+    <select
+      ng-model="$ctrl.page"
+      ng-change="$ctrl.paginateTo($ctrl.page)"
+      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
+      ng-options="pageNumber for pageNumber in $ctrl.pagesList"
+    ></select>
+    <p>Count:</p>
+    <select
+      ng-model="$ctrl.countPerPage"
+      ng-change="$ctrl.changeCountPerPage($ctrl.countPerPage)"
+      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
+      ng-options="count for count in [5,10,20,50,100,200,500,1000]"
+    ></select>
+    <i class="fa fa-refresh" ng-class="{'fa-spin': $ctrl.loading || $ctrl.errorMessage}"></i>
+  </div>
+  <error-view text="$ctrl.errorMessage" visible="$ctrl.errorMessage"></error-view>
   <div>
-    <table-view table-data="$ctrl.state.tableData" on-row-click="$ctrl.state.onUpdate"></table-view>
+    <table-view
+      table-data="$ctrl.tableData"
+      on-row-click="$ctrl.onRowClick"
+      ng-Style="{'display':!$ctrl.errorMessage && !$ctrl.devicesEmpty ? 'visible' : 'none' }"
+    ></table-view>
   </div>
 </div>
