@@ -2,12 +2,15 @@
   <table class="table table-striped table-rounded table-bordered" style="background-color: #c0c0c0">
     <thead>
       <tr>
-        <th class="text-center" scope="col" ng-repeat="column in $ctrl.tableData.columns">{{column}}</th>
+        <th ng-repeat="column in $ctrl.tableData.columns" class="text-center" scope="col">{{column}}</th>
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="row in $ctrl.tableData.rows">
-        <td ng-click="$ctrl.onRowClick($event,row)" class="text-center" ng-repeat="column in $ctrl.tableData.columns">
+      <tr ng-repeat="row in $ctrl.tableData.rows" class="text-center table-view-item">
+        <td
+          ng-click="$ctrl.rowDisabled(row) || $ctrl.onRowClick($event,row)"
+          ng-repeat="column in $ctrl.tableData.columns"
+        >
           {{(row | objectValues)[$index]}}
         </td>
       </tr>

@@ -5,8 +5,6 @@ import devicesViewReducer from "./devices-view/devices-view.slice.js";
 angular
   .module("networkManagerApp", [
     "ngRoute",
-    "ngAnimate",
-    "ngResource",
     "ngRedux",
     "headerView",
     "homeView",

@@ -6,6 +6,7 @@
 
     <!-- App css -->
     <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="app.animations.css" />
 
     <!-- Bootstrap css -->
     <link href="lib/bootstrap/bootstrap.css" rel="stylesheet" />
@@ -86,6 +87,8 @@
 
   <body>
     <header-view></header-view>
-    <div ng-view></div>
+    <div class="view-container">
+      <div ng-view class="view-frame"></div>
+    </div>
   </body>
 </html>

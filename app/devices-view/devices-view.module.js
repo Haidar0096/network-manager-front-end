@@ -29,6 +29,7 @@ angular
           const devices = devicesListSelector(state);
           const paginationData = paginationDataSelector(state);
           const pagesCount = pagesCountSelector(state);
+          const loading = statusSelector(state) === STATUS_LOADING;
           return {
             tableData: new TableViewData(["Device Id", "Device Name"], devices),
             page: paginationData.page,
@@ -36,8 +37,9 @@ angular
             pagesList: Array.from({ length: pagesCount }, (_, i) => i + 1),
             devicesEmpty: devices.length === 0,
             deviceNameFilter: filtersSelector(state).deviceName,
-            loading: statusSelector(state) === STATUS_LOADING,
+            loading: loading,
             errorMessage: errorMessageSelector(state),
+            rowDisabled: (_) => loading,
           };
         };
 
@@ -45,7 +47,7 @@ angular
         $scope.$on("$destroy", unsubscribe);
 
         self.paginateTo = async (page) => {
-          if (page!==undefined && page!==null) {
+          if (page !== undefined && page !== null) {
             await $ngRedux.dispatch(
               devicesActions.goToPage({
                 devicesApi: devicesApi,
@@ -61,16 +63,21 @@ angular
         };
 
         self.addDevice = async ($event) => {
-          let deviceName = await $mdDialog.show({
-            templateUrl: "common/prompt-dialog/prompt-dialog.template.html",
-            parent: angular.element(document.body),
-            targetEvent: $event,
-            clickOutsideToClose: true,
-            controller: function ($mdDialog, AddUserDialogControllerArgs) {
-              return new PromptDialogController($mdDialog, AddUserDialogControllerArgs);
-            },
-            controllerAs: "$ctrl",
-          });
+          let deviceName = await $mdDialog
+            .show({
+              templateUrl: "common/prompt-dialog/prompt-dialog.template.html",
+              parent: angular.element(document.body),
+              targetEvent: $event,
+              clickOutsideToClose: true,
+              controller: function ($mdDialog, AddUserDialogControllerArgs) {
+                return new PromptDialogController($mdDialog, AddUserDialogControllerArgs);
+              },
+              controllerAs: "$ctrl",
+            })
+            .then(
+              (data) => data,
+              () => {}
+            );
           if (deviceName) {
             await $ngRedux.dispatch(
               devicesActions.addDevice({
@@ -96,29 +103,34 @@ angular
         };
 
         self.onRowClick = async ($event, device) => {
-          let deviceName = await $mdDialog.show({
-            templateUrl: "common/prompt-dialog/prompt-dialog.template.html",
-            parent: angular.element(document.body),
-            targetEvent: $event,
-            clickOutsideToClose: true,
-            controller: function ($mdDialog, UpdateUserDialogControllerArgs) {
-              return new PromptDialogController($mdDialog, { ...UpdateUserDialogControllerArgs, data: device.name });
-            },
-            controllerAs: "$ctrl",
-          });
-          if (deviceName && deviceName !== device.name) {
+          let updatedDeviceName = await $mdDialog
+            .show({
+              templateUrl: "common/prompt-dialog/prompt-dialog.template.html",
+              parent: angular.element(document.body),
+              targetEvent: $event,
+              clickOutsideToClose: true,
+              controller: function ($mdDialog, UpdateUserDialogControllerArgs) {
+                return new PromptDialogController($mdDialog, { ...UpdateUserDialogControllerArgs, data: device.name });
+              },
+              controllerAs: "$ctrl",
+            })
+            .then(
+              (data) => data,
+              () => {}
+            );
+          if (updatedDeviceName && updatedDeviceName !== device.name) {
             await $ngRedux.dispatch(
               devicesActions.updateDevice({
                 devicesApi: devicesApi,
                 deviceId: device.id,
-                deviceName: deviceName,
+                deviceName: updatedDeviceName,
               })
             );
             await self.paginateTo(self.page); // refresh the data
           }
         };
 
-        self.paginateTo(self.page); // go to page 1 when this view is initialized
+        self.paginateTo(self.page); // go to page set in the state when this view is initialized
 
         self.shown = false;
         self.toggle = () => {
