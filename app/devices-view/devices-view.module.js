@@ -34,6 +34,7 @@ angular
             tableData: new TableViewData(["Device Id", "Device Name"], devices),
             page: paginationData.page,
             countPerPage: paginationData.countPerPage,
+            totalCount: paginationData.totalCount,
             pagesList: Array.from({ length: pagesCount }, (_, i) => i + 1),
             devicesEmpty: devices.length === 0,
             deviceNameFilter: filtersSelector(state).deviceName,
@@ -62,7 +63,7 @@ angular
           await self.paginateTo(1);
         };
 
-        self.addDevice = async ($event) => {
+        self.onAddPressed = async ($event) => {
           let deviceName = await $mdDialog
             .show({
               templateUrl: "common/prompt-dialog/prompt-dialog.template.html",
@@ -89,15 +90,15 @@ angular
           }
         };
 
-        self.paginateBackward = async () => {
+        self.onPaginateBackwardPressed = async () => {
           self.paginateTo(self.page - 1);
         };
 
-        self.paginateForward = async () => {
+        self.onPaginateForwardPressed = async () => {
           self.paginateTo(self.page + 1);
         };
 
-        self.changeCountPerPage = async (countPerPage) => {
+        self.onCountPerPageChanged = async (countPerPage) => {
           await $ngRedux.dispatch(devicesActions.changeCountPerPage({ countPerPage }));
           await self.paginateTo(1);
         };
