@@ -10,6 +10,7 @@ angular
     "homeView",
     "devicesView",
     "portsView",
+    "phoneNumbersView",
     "clientsView",
   ])
   // Route Configuration
@@ -25,6 +26,9 @@ angular
         })
         .when("/ports", {
           template: "<ports-view></ports-view>",
+        })
+        .when("/phone-numbers", {
+          template: "<phone-numbers-view></phone-numbers-view>",
         })
         .when("/clients", {
           template: "<clients-view></clients-view>",

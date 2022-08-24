@@ -6,5 +6,12 @@ angular.module("tableView", ["ngAnimate"]).component("tableView", {
     tableData: "<",
     onRowClick: "<",
     rowDisabled: "<",
+    animations: "<",
+  },
+  controller: function () {
+    let self = this;
+    self.$onInit = function () {
+      self.animations = self.animations ?? true;
+    };
   },
 });

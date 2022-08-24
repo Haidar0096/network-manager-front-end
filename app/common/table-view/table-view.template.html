@@ -6,7 +6,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="row in $ctrl.tableData.rows" class="text-center table-view-item">
+      <tr ng-repeat="row in $ctrl.tableData.rows" class="text-center" ng-class="{'table-view-item': $ctrl.animations}">
         <td
           ng-click="$ctrl.rowDisabled(row) || $ctrl.onRowClick($event,row)"
           ng-repeat="column in $ctrl.tableData.columns"

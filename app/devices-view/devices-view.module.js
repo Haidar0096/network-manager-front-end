@@ -14,7 +14,7 @@ import {
 import TableViewData from "/app/common/table-view/table-view-data.model.js";
 
 angular
-  .module("devicesView", ["common"])
+  .module("devicesView", ["common", "ngRedux"])
   .component("devicesView", {
     templateUrl: "devices-view/devices-view.template.html",
     controller: [

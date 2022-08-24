@@ -1,0 +1,36 @@
+<div class="container-space-evenly">
+  <input type="text" class="rounded" ng-model="searchText" />
+  <button class="button centered" ng-click="$ctrl.onSearchPressed(searchText)" ng-disabled="$ctrl.searchDisabled">
+    Search
+  </button>
+  <button class="button centered" ng-click="$ctrl.onAddPressed($event)" ng-disabled="$ctrl.addDisabled">Add</button>
+  <button
+    class="button centered"
+    ng-click="$ctrl.onPaginateBackwardPressed()"
+    ng-disabled="$ctrl.paginateBackwardDisabled"
+  >
+    &laquo; Previous
+  </button>
+  <button
+    class="button centered"
+    ng-click="$ctrl.onPaginateForwardPressed()"
+    ng-disabled="$ctrl.paginateForwardDisabled"
+  >
+    Next &raquo;
+  </button>
+  <p>Page:</p>
+  <select
+    ng-model="$ctrl.page"
+    ng-change="$ctrl.onPageChanged($ctrl.page)"
+    ng-disabled="$ctrl.changePageDisabled"
+    ng-options="pageNumber for pageNumber in $ctrl.pagesList"
+  ></select>
+  <p>Count:</p>
+  <select
+    ng-model="$ctrl.countPerPage"
+    ng-change="$ctrl.onCountPerPageChanged($ctrl.countPerPage)"
+    ng-disabled="$ctrl.changeCountPerPageDisabled"
+    ng-options="count for count in $ctrl.countPerPageList"
+  ></select>
+  <i class="fa fa-refresh" ng-class="{'fa-spin': $ctrl.loading}"></i>
+</div>

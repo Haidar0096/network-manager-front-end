@@ -1,52 +1,26 @@
 <div class="md-padding">
-  <div class="container-space-evenly">
-    <input type="text" class="rounded" ng-model="searchText" />
-    <button
-      class="button centered"
-      ng-click="$ctrl.onSearchPressed(searchText)"
-      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
-    >
-      Search
-    </button>
-    <button
-      class="button centered"
-      ng-click="$ctrl.onAddPressed($event)"
-      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
-    >
-      Add
-    </button>
-    <button
-      class="button centered"
-      ng-click="$ctrl.onPaginateBackwardPressed()"
-      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
-    >
-      &laquo; Previous
-    </button>
-    <button
-      class="button centered"
-      ng-click="$ctrl.onPaginateForwardPressed()"
-      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
-    >
-      Next &raquo;
-    </button>
-    <p>Page:</p>
-    <select
-      ng-model="$ctrl.page"
-      ng-change="$ctrl.paginateTo($ctrl.page)"
-      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
-      ng-options="pageNumber for pageNumber in $ctrl.pagesList"
-    ></select>
-    <p>Count:</p>
-    <select
-      ng-model="$ctrl.countPerPage"
-      ng-change="$ctrl.onCountPerPageChanged($ctrl.countPerPage)"
-      ng-disabled="$ctrl.loading || $ctrl.errorMessage"
-      ng-options="count for count in [5,10,20,50,100,200,500,1000]"
-    ></select>
-    <i class="fa fa-refresh" ng-class="{'fa-spin': $ctrl.loading}"></i>
-  </div>
+  <paginated-data-actions-view
+    on-search-pressed="$ctrl.onSearchPressed"
+    search-disabled="$ctrl.loading || $ctrl.errorMessage"
+    on-add-pressed="$ctrl.onAddPressed"
+    add-disabled="$ctrl.loading || $ctrl.errorMessage"
+    on-paginate-backward-pressed="$ctrl.onPaginateBackwardPressed"
+    paginate-backward-disabled="$ctrl.loading || $ctrl.errorMessage"
+    on-paginate-forward-pressed="$ctrl.onPaginateForwardPressed"
+    paginate-forward-disabled="$ctrl.loading || $ctrl.errorMessage"
+    page="$ctrl.page"
+    on-page-changed="$ctrl.paginateTo"
+    change-page-disabled="$ctrl.loading || $ctrl.errorMessage"
+    pages-list="$ctrl.pagesList"
+    count-per-page="$ctrl.countPerPage"
+    on-count-per-page-changed="$ctrl.onCountPerPageChanged"
+    change-count-per-page-disabled="$ctrl.loading || $ctrl.errorMessage"
+    count-per-page-list="[5,10,20,50,100,200,500,1000]"
+    loading="$ctrl.loading"
+  ></paginated-data-actions-view>
   <strong class="centered md-padding" ng-Style="{'display':$ctrl.deviceNameFilter? 'visible' : 'none' }"
-    >Showing {{$ctrl.countPerPage}} out of {{$ctrl.totalCount}} results for "{{$ctrl.deviceNameFilter}}"</strong
+    >Showing {{$ctrl.countPerPage}} results per page. Total = {{$ctrl.totalCount}} results for
+    "{{$ctrl.deviceNameFilter}}"</strong
   >
   <error-view text="$ctrl.errorMessage" visible="$ctrl.errorMessage"></error-view>
   <div>

@@ -1,0 +1,23 @@
+/* Animate `ngRepeat` in `TableView` component */
+.table-view-item.ng-enter,
+.table-view-item.ng-enter,
+.table-view-item.ng-move {
+  --transition-duration: 300ms;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity var(--transition-duration) ease-out, transform var(--transition-duration) ease-out;
+}
+
+.table-view-item.ng-enter-stagger {
+  transition-delay: 10ms;
+
+  /* As of 1.4.4, this must always be set: it signals ngAnimate
+     to not accidentally inherit a delay property from another CSS class */
+  transition-duration: 0s;
+}
+
+.table-view-item.ng-enter.ng-enter-active,
+.table-view-item.ng-move.ng-move-active {
+  opacity: 1;
+  transform: translateX(0%);
+}
