@@ -43,7 +43,7 @@
       ng-disabled="$ctrl.loading || $ctrl.errorMessage"
       ng-options="count for count in [5,10,20,50,100,200,500,1000]"
     ></select>
-    <i class="fa fa-refresh" ng-class="{'fa-spin': $ctrl.loading || $ctrl.errorMessage}"></i>
+    <i class="fa fa-refresh" ng-class="{'fa-spin': $ctrl.loading}"></i>
   </div>
   <strong class="centered md-padding" ng-Style="{'display':$ctrl.deviceNameFilter? 'visible' : 'none' }"
     >Showing results for "{{$ctrl.deviceNameFilter}}"</strong
