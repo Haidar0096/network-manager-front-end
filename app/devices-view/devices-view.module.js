@@ -14,7 +14,7 @@ import {
 import TableViewData from "/app/common/table-view/table-view-data.model.js";
 
 angular
-  .module("devicesView", ["common", "ngRedux"])
+  .module("devicesView", ["common", "ngRedux", "ngMaterial"])
   .component("devicesView", {
     templateUrl: "devices-view/devices-view.template.html",
     controller: [
@@ -64,9 +64,9 @@ angular
         };
 
         self.onAddPressed = async ($event) => {
-          let deviceName = await $mdDialog
+          const deviceName = await $mdDialog
             .show({
-              templateUrl: "common/prompt-dialog/prompt-dialog.template.html",
+              templateUrl: "/app/common/prompt-dialog/prompt-dialog.template.html",
               parent: angular.element(document.body),
               targetEvent: $event,
               clickOutsideToClose: true,
@@ -76,18 +76,17 @@ angular
               controllerAs: "$ctrl",
             })
             .then(
-              (data) => data,
+              async (deviceName) => {
+                await $ngRedux.dispatch(
+                  devicesActions.addDevice({
+                    devicesApi: devicesApi,
+                    deviceName: deviceName,
+                  })
+                );
+                await self.paginateTo(self.page); // refresh the data
+              },
               () => {}
             );
-          if (deviceName) {
-            await $ngRedux.dispatch(
-              devicesActions.addDevice({
-                devicesApi: devicesApi,
-                deviceName: deviceName,
-              })
-            );
-            await self.paginateTo(self.page); // refresh the data
-          }
         };
 
         self.onPaginateBackwardPressed = async () => {
@@ -132,11 +131,6 @@ angular
         };
 
         self.paginateTo(self.page); // go to page set in the state when this view is initialized
-
-        self.shown = false;
-        self.toggle = () => {
-          self.shown = !self.shown;
-        };
       },
     ],
   })

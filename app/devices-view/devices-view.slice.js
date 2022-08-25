@@ -35,7 +35,7 @@ const calculatePagesCount = (totalCount, countPerPage) => Math.ceil(totalCount /
  */
 const getTotalCount = async (devicesApi, filters) => {
   if (filters.deviceName) {
-    return await devicesApi.getDevicesCountByName(filters.deviceName);
+    return await devicesApi.getDevicesCountForName(filters.deviceName);
   } else {
     return await devicesApi.getDevicesCount();
   }

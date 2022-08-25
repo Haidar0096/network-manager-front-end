@@ -1,0 +1,27 @@
+<md-dialog class="md-padding" style="width: 40%">
+  <md-dialog-content class="centered">
+    <p>{{$ctrl.title}}</p>
+    <div class="container-space-evenly">
+      <input
+        class="form-control rounded text-center m-1"
+        type="number"
+        ng-model="$ctrl.portNumber"
+        placeholder="Port Number"
+      />
+      <select
+        class="form-control text-center rounded m-1"
+        ng-model="$ctrl.deviceId"
+        ng-options="deviceId for deviceId in $ctrl.devicesIds "
+      >
+        <option value="" selected disabled>Device Id</option>
+      </select>
+    </div>
+    <label class="text-danger" ng-style="{'visibility':$ctrl.alertText?'visible':'hidden'}">{{$ctrl.alertText}}</label>
+  </md-dialog-content>
+  <md-dialog-actions>
+    <div class="centered" style="width: 100%">
+      <md-button class="md-raised md-primary" ng-click="$ctrl.onConfirm()">Confirm</md-button>
+      <md-button class="md-raised" ng-click="$ctrl.onCancel()">Cancel</md-button>
+    </div>
+  </md-dialog-actions>
+</md-dialog>

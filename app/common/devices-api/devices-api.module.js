@@ -23,8 +23,8 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
           url: baseUrl + "/count",
           method: "GET",
         },
-        getDevicesCountByName: {
-          url: baseUrl + "/count-by-name?deviceName=:name&exactMatch=:exactMatch",
+        getDevicesCountForName: {
+          url: baseUrl + "/count-for-name?deviceName=:name&exactMatch=:exactMatch",
           method: "GET",
         },
         addDevice: {
@@ -35,17 +35,29 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
           url: baseUrl + "/update",
           method: "POST",
         },
+        getDeviceIds: {
+          url: baseUrl + "/ids",
+          method: "GET",
+        },
       }
     );
 
     const httpDevicesMapper = (httpDevices) =>
       httpDevices.map((httpDevice) => new Device({ id: httpDevice.Id, name: httpDevice.Name }));
 
+    const getResponseDataOrThrow = (response) => {
+      if (response.HasError) {
+        throw new Error(response.Message);
+      } else {
+        return response.Data;
+      }
+    };
+
     self.getDevicesPaginated = (offset, count) =>
       DevicesResource.getDevicesPaginated({
         offset: offset,
         count: count,
-      }).$promise.then((response) => httpDevicesMapper(response.Data));
+      }).$promise.then((response) => httpDevicesMapper(getResponseDataOrThrow(response)));
 
     self.getDevicesByNamePaginated = (name, offset, count, exactMatch = false) =>
       DevicesResource.getDevicesByNamePaginated({
@@ -53,21 +65,28 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
         offset: offset,
         count: count,
         exactMatch: exactMatch,
-      }).$promise.then((response) => httpDevicesMapper(response.Data));
+      }).$promise.then((response) => httpDevicesMapper(getResponseDataOrThrow(response)));
 
-    self.getDevicesCount = () => DevicesResource.getDevicesCount().$promise.then((response) => response.Data);
+    self.getDevicesCount = () =>
+      DevicesResource.getDevicesCount().$promise.then((response) => getResponseDataOrThrow(response));
 
-    self.getDevicesCountByName = (name, exactMatch = false) => {
-      return DevicesResource.getDevicesCountByName({ name, exactMatch }).$promise.then((response) => response.Data);
-    };
+    self.getDevicesCountForName = (name, exactMatch = false) =>
+      DevicesResource.getDevicesCountForName({ name, exactMatch }).$promise.then((response) =>
+        getResponseDataOrThrow(response)
+      );
 
     self.addDevice = (deviceName) =>
-      DevicesResource.addDevice(new AddDeviceRequest(deviceName)).$promise.then((response) => response.Data);
+      DevicesResource.addDevice(new AddDeviceRequest(deviceName)).$promise.then((response) =>
+        getResponseDataOrThrow(response)
+      );
 
     self.updateDevice = (deviceId, deviceName) =>
-      DevicesResource.updateDevice(new UpdateDeviceRequest(deviceId, deviceName)).$promise.then(
-        (response) => response.Data
+      DevicesResource.updateDevice(new UpdateDeviceRequest(deviceId, deviceName)).$promise.then((response) =>
+        getResponseDataOrThrow(response)
       );
+
+    self.getDeviceIds = () =>
+      DevicesResource.getDeviceIds().$promise.then((response) => getResponseDataOrThrow(response));
   },
 ]);
 

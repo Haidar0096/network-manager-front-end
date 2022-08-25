@@ -1,5 +1,5 @@
 <div class="container-space-evenly">
-  <input type="text" class="rounded" ng-model="searchText" />
+  <input ng-attr-type="{{$ctrl.searchFieldInputType}}" class="rounded" ng-model="searchText" />
   <button class="button centered" ng-click="$ctrl.onSearchPressed(searchText)" ng-disabled="$ctrl.searchDisabled">
     Search
   </button>

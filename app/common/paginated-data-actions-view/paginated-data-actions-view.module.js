@@ -11,7 +11,7 @@ angular.module("paginatedDataActionsView", []).component("paginatedDataActionsVi
     paginateBackwardDisabled: "<",
     onPaginateForwardPressed: "<",
     paginateForwardDisabled: "<",
-    page: "<",
+    page: "=",
     onPageChanged: "<",
     changePageDisabled: "<",
     pagesList: "<",
@@ -20,5 +20,12 @@ angular.module("paginatedDataActionsView", []).component("paginatedDataActionsVi
     changeCountPerPageDisabled: "<",
     countPerPageList: "<",
     loading: "=",
+    searchFieldInputType: "<",
+  },
+  controller: function () {
+    let self = this;
+    self.$onInit = function () {
+      self.searchFieldInputType = self.searchFieldInputType ?? 'text';
+    };
   },
 });

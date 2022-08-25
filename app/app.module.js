@@ -1,6 +1,7 @@
 "use strict";
 
-import devicesViewReducer from "./devices-view/devices-view.slice.js";
+import devicesViewReducer from "/app/devices-view/devices-view.slice.js";
+import portsViewReducer from "/app/ports-view/ports-view.slice.js";
 
 angular
   .module("networkManagerApp", [
@@ -44,6 +45,7 @@ angular
         reducer: {
           // Define a top-level state field named `devicesViewState`, handled by `devicesViewReducer`
           devicesViewState: devicesViewReducer,
+          portsViewState: portsViewReducer,
         },
         middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }), // this is to disable undesired serialization errors
       });

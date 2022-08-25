@@ -17,10 +17,11 @@
     change-count-per-page-disabled="$ctrl.loading || $ctrl.errorMessage"
     count-per-page-list="[5,10,20,50,100,200,500,1000]"
     loading="$ctrl.loading"
+    search-field-input-type="'number'"
   ></paginated-data-actions-view>
-  <strong class="centered md-padding" ng-Style="{'display':$ctrl.deviceNameFilter? 'visible' : 'none' }"
-    >Showing {{$ctrl.countPerPage}} results per page. Total = {{$ctrl.totalCount}} results for
-    "{{$ctrl.deviceNameFilter}}"</strong
+  <strong class="centered md-padding" ng-Style="{'display':$ctrl.portNumberFilter? 'visible' : 'none' }"
+    >Showing {{$ctrl.countPerPage}} results per page. Total = {{$ctrl.totalCount}} results for port
+    "{{$ctrl.portNumberFilter}}"</strong
   >
   <error-view text="$ctrl.errorMessage" visible="$ctrl.errorMessage"></error-view>
   <div>
