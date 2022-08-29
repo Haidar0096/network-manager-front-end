@@ -22,12 +22,11 @@
     >Showing {{$ctrl.countPerPage}} results per page. Total = {{$ctrl.totalCount}} results for
     "{{$ctrl.deviceNameFilter}}"</strong
   >
-  <error-view text="$ctrl.errorMessage" visible="$ctrl.errorMessage"></error-view>
+  <error-view class="md-padding" text="$ctrl.errorMessage" visible="$ctrl.errorMessage"></error-view>
   <div>
     <table-view
       table-data="$ctrl.tableData"
       on-row-click="$ctrl.onRowClick"
-      ng-Style="{'display':!$ctrl.errorMessage && !$ctrl.devicesEmpty ? 'visible' : 'none' }"
       row-disabled="$ctrl.rowDisabled"
     ></table-view>
   </div>

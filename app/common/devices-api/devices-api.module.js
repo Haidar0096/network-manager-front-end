@@ -11,6 +11,10 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
       "",
       {},
       {
+        getAllDevices: {
+          url: baseUrl + "/all",
+          method: "GET",
+        },
         getDevicesPaginated: {
           url: baseUrl + "/paginated?offset=:offset&count=:count",
           method: "GET",
@@ -25,6 +29,10 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
         },
         getDevicesCountForName: {
           url: baseUrl + "/count-for-name?deviceName=:name&exactMatch=:exactMatch",
+          method: "GET",
+        },
+        getDeviceById:{
+          url: baseUrl + "/device/:id",
           method: "GET",
         },
         addDevice: {
@@ -53,6 +61,9 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
       }
     };
 
+    self.getAllDevices = () =>
+      DevicesResource.getAllDevices().$promise.then((response) => httpDevicesMapper(getResponseDataOrThrow(response)));
+
     self.getDevicesPaginated = (offset, count) =>
       DevicesResource.getDevicesPaginated({
         offset: offset,
@@ -74,6 +85,9 @@ angular.module("devicesApi", ["ngResource"]).service("devicesApi", [
       DevicesResource.getDevicesCountForName({ name, exactMatch }).$promise.then((response) =>
         getResponseDataOrThrow(response)
       );
+
+    self.getDeviceById = (id) =>
+      DevicesResource.getDeviceById({ id }).$promise.then((response) => getResponseDataOrThrow(response));
 
     self.addDevice = (deviceName) =>
       DevicesResource.addDevice(new AddDeviceRequest(deviceName)).$promise.then((response) =>

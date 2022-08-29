@@ -4,7 +4,7 @@
 .table-view-item.ng-move {
   --transition-duration: 300ms;
   opacity: 0;
-  transform: translateX(-100%);
+  /* transform: translateX(-100%); */
   transition: opacity var(--transition-duration) ease-out, transform var(--transition-duration) ease-out;
 }
 
@@ -19,5 +19,5 @@
 .table-view-item.ng-enter.ng-enter-active,
 .table-view-item.ng-move.ng-move-active {
   opacity: 1;
-  transform: translateX(0%);
+  /* transform: translateX(0%); */
 }

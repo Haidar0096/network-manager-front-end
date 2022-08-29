@@ -2,6 +2,9 @@
 
 import devicesViewReducer from "/app/devices-view/devices-view.slice.js";
 import portsViewReducer from "/app/ports-view/ports-view.slice.js";
+import clientsViewReducer from "/app/clients-view/clients-view.slice.js";
+import phoneNumbersViewReducer from "/app/phone-numbers-view/phone-numbers-view.slice.js";
+import reservationsViewReducer from "/app/reservations-view/reservations-view.slice.js";
 
 angular
   .module("networkManagerApp", [
@@ -13,6 +16,7 @@ angular
     "portsView",
     "phoneNumbersView",
     "clientsView",
+    "reservationsView",
   ])
   // Route Configuration
   .config([
@@ -34,6 +38,9 @@ angular
         .when("/clients", {
           template: "<clients-view></clients-view>",
         })
+        .when("/reservations", {
+          template: "<reservations-view></reservations-view>",
+        })
         .otherwise("/");
     },
   ])
@@ -46,6 +53,9 @@ angular
           // Define a top-level state field named `devicesViewState`, handled by `devicesViewReducer`
           devicesViewState: devicesViewReducer,
           portsViewState: portsViewReducer,
+          clientsViewState: clientsViewReducer,
+          phoneNumbersViewState: phoneNumbersViewReducer,
+          reservationsViewState: reservationsViewReducer,
         },
         middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }), // this is to disable undesired serialization errors
       });

@@ -1,3 +1,11 @@
 "use strict";
 
-angular.module("common", ["tableView", "devicesApi", "errorView", "paginatedDataActionsView", "portsApi"]);
+angular.module("common", [
+  "tableView",
+  "devicesApi",
+  "errorView",
+  "paginatedDataActionsView",
+  "portsApi",
+  "clientsApi",
+  "phoneNumbersApi",
+]);

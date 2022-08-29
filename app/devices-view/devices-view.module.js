@@ -64,7 +64,7 @@ angular
         };
 
         self.onAddPressed = async ($event) => {
-          const deviceName = await $mdDialog
+          await $mdDialog
             .show({
               templateUrl: "/app/common/prompt-dialog/prompt-dialog.template.html",
               parent: angular.element(document.body),
@@ -77,13 +77,20 @@ angular
             })
             .then(
               async (deviceName) => {
-                await $ngRedux.dispatch(
-                  devicesActions.addDevice({
-                    devicesApi: devicesApi,
-                    deviceName: deviceName,
-                  })
-                );
-                await self.paginateTo(self.page); // refresh the data
+                if (deviceName !== undefined && deviceName !== null) {
+                  await $ngRedux
+                    .dispatch(
+                      devicesActions.addDevice({
+                        devicesApi: devicesApi,
+                        deviceName: deviceName,
+                      })
+                    )
+                    .unwrap()
+                    .then(
+                      (_) => self.paginateTo(self.page),
+                      (_) => {}
+                    );
+                }
               },
               () => {}
             );
@@ -119,14 +126,19 @@ angular
               () => {}
             );
           if (updatedDeviceName && updatedDeviceName !== device.name) {
-            await $ngRedux.dispatch(
-              devicesActions.updateDevice({
-                devicesApi: devicesApi,
-                deviceId: device.id,
-                deviceName: updatedDeviceName,
-              })
-            );
-            await self.paginateTo(self.page); // refresh the data
+            $ngRedux
+              .dispatch(
+                devicesActions.updateDevice({
+                  devicesApi: devicesApi,
+                  deviceId: device.id,
+                  deviceName: updatedDeviceName,
+                })
+              )
+              .unwrap()
+              .then(
+                (_) => self.paginateTo(self.page),
+                (_) => {}
+              );
           }
         };
 

@@ -16,6 +16,7 @@ angular.module("headerView", []).component("headerView", {
       self.redirectToPorts = () => $location.path("/ports");
       self.redirectToPhoneNumbers = () => $location.path("/phone-numbers");
       self.redirectToClients = () => $location.path("/clients");
+      self.redirectToReservations = () => $location.path("/reservations");
     },
   ],
 });

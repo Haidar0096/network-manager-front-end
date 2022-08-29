@@ -2,13 +2,13 @@
 
 import {
   portsActions,
-  portsListSelector,
   statusSelector,
   errorMessageSelector,
   STATUS_LOADING,
   paginationDataSelector,
   pagesCountSelector,
   filtersSelector,
+  portsListSelector,
 } from "/app/ports-view/ports-view.slice.js";
 import TableViewData from "/app/common/table-view/table-view-data.model.js";
 
@@ -24,12 +24,12 @@ angular.module("portsView", ["common", "ngRedux", "ngMaterial"]).component("port
       let self = this;
 
       const mapStateToThis = (state) => {
-        const ports = portsListSelector(state);
+        const ports = portsListSelector(state).map((port) => ({ number: port.number, deviceName: port.deviceName }));
         const paginationData = paginationDataSelector(state);
         const pagesCount = pagesCountSelector(state);
         const loading = statusSelector(state) === STATUS_LOADING;
         return {
-          tableData: new TableViewData(["Port Id", "Port Number", "Device Id"], ports),
+          tableData: new TableViewData(["Port Number", "Device Name"], ports),
           page: paginationData.page,
           countPerPage: paginationData.countPerPage,
           totalCount: paginationData.totalCount,
@@ -50,6 +50,7 @@ angular.module("portsView", ["common", "ngRedux", "ngMaterial"]).component("port
           await $ngRedux.dispatch(
             portsActions.goToPage({
               portsApi: portsApi,
+              devicesApi: devicesApi,
               page: page,
             })
           );
@@ -62,24 +63,40 @@ angular.module("portsView", ["common", "ngRedux", "ngMaterial"]).component("port
       };
 
       self.onAddPressed = async ($event) => {
-        await $ngRedux.dispatch(portsActions.getDeviceIds({ devicesApi: devicesApi }));
-        await $mdDialog
-          .show({
-            templateUrl: "/app/ports-view/add-port-dialog.template.html",
-            parent: angular.element(document.body),
-            targetEvent: $event,
-            clickOutsideToClose: true,
-            controller: "AddPortDialogController",
-            controllerAs: "$ctrl",
-          })
+        $ngRedux
+          .dispatch(portsActions.getDevices({ devicesApi: devicesApi }))
+          .unwrap()
           .then(
-            async (data) => {
-              await $ngRedux.dispatch(
-                portsActions.addPort({ portsApi: portsApi, portNumber: data.portNumber, deviceId: data.deviceId })
-              );
-              await self.paginateTo(self.page);
+            async (_) => {
+              await $mdDialog
+                .show({
+                  templateUrl: "/app/ports-view/add-port-dialog.template.html",
+                  parent: angular.element(document.body),
+                  targetEvent: $event,
+                  clickOutsideToClose: true,
+                  controller: "AddPortDialogController",
+                  controllerAs: "$ctrl",
+                })
+                .then(
+                  async (data) => {
+                    $ngRedux
+                      .dispatch(
+                        portsActions.addPort({
+                          portsApi: portsApi,
+                          portNumber: data.portNumber,
+                          deviceId: data.device.id,
+                        })
+                      )
+                      .unwrap()
+                      .then(
+                        (_) => self.paginateTo(self.page),
+                        (_) => {}
+                      );
+                  },
+                  () => {}
+                );
             },
-            () => {}
+            (_) => {}
           );
       };
 

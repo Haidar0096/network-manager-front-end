@@ -1,0 +1,38 @@
+<md-dialog class="md-padding" style="width: 60%; height: 60%">
+  <md-dialog-content class="centered">
+    <p>{{$ctrl.title}}</p>
+    <div class="container-space-evenly">
+      <select
+        class="form-control text-center rounded m-1"
+        ng-model="$ctrl.phoneNumber"
+        ng-options="phoneNumber.number for phoneNumber in $ctrl.phoneNumbers"
+      >
+        <option value="" selected disabled>Phone</option>
+      </select>
+      <select
+        class="form-control text-center rounded m-1"
+        ng-model="$ctrl.client"
+        ng-options="client.name for client in $ctrl.clients"
+      >
+        <option value="" selected disabled>Client</option>
+      </select>
+    </div>
+    <div class="column">
+      <div class="row-wrap md-padding">
+        <label class="md-padding">BED:</label>
+        <input type="datetime-local" ng-model="$ctrl.BEDString" />
+      </div>
+      <div class="row-wrap md-padding">
+        <label class="md-padding">EED:</label>
+        <input type="datetime-local" ng-model="$ctrl.EEDString" />
+      </div>
+    </div>
+    <label class="text-danger" ng-style="{'visibility':$ctrl.alertText?'visible':'hidden'}">{{$ctrl.alertText}}</label>
+  </md-dialog-content>
+  <md-dialog-actions>
+    <div class="centered-horizontal" style="width: 100%">
+      <md-button class="md-raised md-primary" ng-click="$ctrl.onConfirm()">Confirm</md-button>
+      <md-button class="md-raised" ng-click="$ctrl.onCancel()">Cancel</md-button>
+    </div>
+  </md-dialog-actions>
+</md-dialog>

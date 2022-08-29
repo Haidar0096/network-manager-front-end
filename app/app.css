@@ -29,6 +29,11 @@
   align-items: center;
 }
 
+.centered-horizontal {
+  display: flex;
+  justify-content: center;
+}
+
 .button {
   margin: 5px;
   border-radius: 12px;
@@ -63,6 +68,28 @@
   flex-flow: row nowrap;
   align-items: baseline;
   justify-content: space-evenly;
+}
+
+.container-space-evenly-wrap{
+  display: flex;
+  flex-flow: row wrap;
+  align-items: baseline;
+  justify-content: space-evenly;
+}
+
+.column{
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.row{
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.row-wrap{
+  display: flex;
+  flex-flow: row wrap;
 }
 
 .text-danger{

@@ -13,7 +13,7 @@ const initialState = portsAdapter.getInitialState({
     countPerPage: 5, // nb of ports per page
     totalCount: 0, // total number of ports, including the ones on the server
   },
-  deviceIds: [], // list of all available devices ids
+  devices: [], // list of all available devices
   filters: {
     portNumber: null, // filter by port number
   },
@@ -49,16 +49,6 @@ const getTotalCount = async (portsApi, filters) => {
  */
 const goToPage = RTK.createAsyncThunk("ports/goToPage", async (args, utils) => {
   try {
-    // // TODO: remove returning dummy data
-    // return utils.fulfillWithValue({
-    //   ports: [
-    //     new Port({ id: 1, number: 102, deviceId: 95 }),
-    //     new Port({ id: 2, number: 2355, deviceId: 42 }),
-    //     new Port({ id: 3, number: 4200, deviceId: 23 }),
-    //     new Port({ id: 4, number: 4292, deviceId: 12 }),
-    //   ],
-    //   updatedPaginationData: paginationDataSelector(utils.getState()),
-    // });
     if (!isNumber(args.page)) {
       throw new Error("page must be a number");
     }
@@ -87,6 +77,14 @@ const goToPage = RTK.createAsyncThunk("ports/goToPage", async (args, utils) => {
       ports = await args.portsApi.getPortsPaginated(offset, countPerPage);
     }
 
+    await Promise.all(
+      ports.map(async (port) => {
+        const deviceName = (await args.devicesApi.getDeviceById(port.deviceId)).Name;
+        port.deviceName = deviceName;
+        return port;
+      })
+    );
+
     const updatedPaginationData = { ...currentPaginationData, page: page, totalCount: totalCount };
 
     return utils.fulfillWithValue({ ports, updatedPaginationData });
@@ -114,10 +112,10 @@ const addPort = RTK.createAsyncThunk("ports/addPort", async (args, utils) => {
  * Fetches All the available devices ids.
  * @param {devicesApi} portsApi - the ports API
  */
-const getDeviceIds = RTK.createAsyncThunk("ports/getDevicesIds", async (args, utils) => {
+const getDevices = RTK.createAsyncThunk("ports/getDevices", async (args, utils) => {
   try {
-    const ids = await args.devicesApi.getDeviceIds();
-    return utils.fulfillWithValue(ids);
+    const devices = await args.devicesApi.getAllDevices();
+    return utils.fulfillWithValue(devices);
   } catch (e) {
     return utils.rejectWithValue(e);
   }
@@ -167,16 +165,16 @@ const portsSlice = RTK.createSlice({
         state.status = STATUS_IDLE;
       });
 
-    // handle getDeviceIds
+    // handle getDevices
     builder
-      .addCase(getDeviceIds.pending, (state, action) => {
+      .addCase(getDevices.pending, (state, action) => {
         state.status = STATUS_LOADING;
       })
-      .addCase(getDeviceIds.fulfilled, (state, action) => {
-        state.deviceIds = action.payload;
+      .addCase(getDevices.fulfilled, (state, action) => {
+        state.devices = action.payload;
         state.status = STATUS_IDLE;
       })
-      .addCase(getDeviceIds.rejected, (state, action) => {
+      .addCase(getDevices.rejected, (state, action) => {
         state.errorMessage = defaultErrorMessage;
         state.status = STATUS_IDLE;
       });
@@ -188,7 +186,7 @@ export const portsActions = {
   ...portsSlice.actions,
   goToPage,
   addPort,
-  getDeviceIds,
+  getDevices,
 };
 
 // Reducer
@@ -206,6 +204,6 @@ export const statusSelector = (state) => state.portsViewState.status;
 
 export const filtersSelector = (state) => state.portsViewState.filters;
 
-export const deviceIdsSelector = (state) => state.portsViewState.deviceIds;
+export const devicesSelector = (state) => state.portsViewState.devices;
 
 export const errorMessageSelector = (state) => state.portsViewState.errorMessage;

@@ -4,9 +4,8 @@
     <div class="container-space-evenly">
       <input
         class="form-control rounded text-center m-1"
-        type="number"
-        ng-model="$ctrl.portNumber"
-        placeholder="Port Number"
+        ng-model="$ctrl.phoneNumber"
+        placeholder="Phone"
       />
       <select
         class="form-control text-center rounded m-1"
@@ -14,6 +13,11 @@
         ng-options="device.name for device in $ctrl.devices"
       >
         <option value="" selected disabled>Device Name</option>
+      </select>
+      <select class="form-control text-center rounded m-1" ng-model="$ctrl.status">
+        <option value="" selected disabled>Status</option>
+        <option value="Reserved">Reserved</option>
+        <option value="NotReserved">Available</option>
       </select>
     </div>
     <label class="text-danger" ng-style="{'visibility':$ctrl.alertText?'visible':'hidden'}">{{$ctrl.alertText}}</label>
